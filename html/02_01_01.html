@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>MathematicsAndPhysicsOfDeveloping3DGames - グラデーション</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="../css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <script id="js">
+        function drawCanvas(context) {
+          // スキャンラインによる描画
+          let drawScanLine = function(x1, y1, x2, y2, x3, y3) {
+            // 下準備(y座標でソート)
+            let ftemp = 0;
+            if ( y1 > y2 ) {
+              ftemp = y1;  y1 = y2;  y2 = ftemp;
+              ftemp = x1;  x1 = x2;  x2 = ftemp;
+            }
+            if ( y1 > y3 ) {
+              ftemp = y1;  y1 = y3;  y3 = ftemp;
+              ftemp = x1;  x1 = x3;  x3 = ftemp;
+            }
+            if ( y2 > y3 ) {
+              ftemp = y2;  y2 = y3;  y3 = ftemp;
+              ftemp = x2;  x2 = x3;  x3 = ftemp;
+            }
+            // y方向に対する傾き
+            let a12 = (x2 - x1) / (y2 - y1); 
+            let a13 = (x3 - x1) / (y3 - y1);
+            let a23 = (x3 - x2) / (y3 - y2);
+            let xl = x1;
+            let xr = x1;
+            if (a12 < a13) {
+              context.fillStyle = "rgb(255, 0, 0)";
+              for (let y = y1; y < y2; y++) {
+                for (let x = xl; x < xr; x++) {
+                  context.fillRect(x, y, 1, 1);
+                }
+                xl += a12; xr += a13;
+              }
+              context.fillStyle = "rgb(255, 255, 0)";
+              for (let y = y2; y < y3; y++) {
+                  for (let x = xl; x < xr; x++) {
+                    context.fillRect(x, y, 1, 1 );
+                  }
+                xl += a23; xr += a13;
+              }
+            }
+            else {
+              context.fillStyle = "rgb(0, 255, 255)";
+              for (let y = y1; y < y2; y++) {
+                  for (let  x = xl; x < xr; x++) {
+                    context.fillRect(x, y, 1, 1);
+                  }
+                xl += a13; xr += a12;
+              }
+              context.fillStyle = "rgb(0, 0, 255)";
+              for (let y = y2; y < y3; y++) {
+                  for (let  x = xl; x < xr; x++) {
+                    context.fillRect(x, y, 1, 1);
+                  }
+                xl += a13; xr += a23;
+              }
+            }
+          }
+          drawScanLine(0, 36, 300, 80, 280, 400);
+        }
+    </script>
+    <div class="container">
+      <div class="text-center">
+        <canvas id="canvas" width="512" height="512"></canvas>
+      </div>
+      <pre id="editor" style="height: 400px"></pre>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../js/common/common.js"></script>
+    <script src="../js/common/aceutil.js"></script>
+    <script>
+        MathematicsAndPhysicsOfDeveloping3DGames.Common.initialize();
+        MathematicsAndPhysicsOfDeveloping3DGames.Common.run(drawCanvas);
+    </script>
+  </body>
+</html>
